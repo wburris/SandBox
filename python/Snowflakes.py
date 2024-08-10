@@ -19,14 +19,16 @@ class ControlPanel:
         self.reverseCheck = Control.CheckBox(10, 160, 20, 20, "Reverse Vertices", True, self.reverse_checkbox_changed)
         self.levelSpinBox = Control.Spinbox(120, 200, 70, 30, 0, 6, 3, 1, self.level_spinbox_changed)
         self.levelLabel = Control.Label(5, 200, 70, 30, "level(1-6):")
-        self.kochButton = Control.Button(10, 240, 180, 30, "Koch Snowflake", self.koch_button_clicked)
-        self.gosperSnowflakeButton = Control.Button(10, 280, 180, 30, "Gosper Snowflake", self.gosper_snowflake_button_clicked)
-        self.squareFlakeButton = Control.Button(10, 320, 180, 30, "Square Snowflake", self.square_flake_button_clicked)
-        self.sevenFlakeButton = Control.Button(10, 360, 180, 30, "7 Segment", self.seven_flake_button_clicked)
-        self.eightFlakeButton = Control.Button(10, 400, 180, 30, "8 Segment", self.eight_flake_button_clicked)
-        self.eightteenFlakeButton = Control.Button(10, 440, 180, 30, "18 Segment", self.eighteen_flake_button_clicked)
-        self.thirtytwoFlakeButton = Control.Button(10, 480, 180, 30, "32 Segment", self.thirtytwo_flake_button_clicked)
-        self.fiftyFlakeButton = Control.Button(10, 520, 180, 30, "50 Segment", self.fifty_flake_button_clicked)
+        self.angleSpinBox = Control.Spinbox(120, 240, 70, 30, 0, 90, 60, 1, self.angle_spinbox_changed)
+        self.angleLabel = Control.Label(5, 240, 70, 30, "Koch ang:")
+        self.kochButton = Control.Button(10, 280, 180, 30, "Koch Snowflake", self.koch_button_clicked)
+        self.gosperSnowflakeButton = Control.Button(10, 320, 180, 30, "Gosper Snowflake", self.gosper_snowflake_button_clicked)
+        self.squareFlakeButton = Control.Button(10, 360, 180, 30, "Square Snowflake", self.square_flake_button_clicked)
+        self.sevenFlakeButton = Control.Button(10, 400, 180, 30, "7 Segment", self.seven_flake_button_clicked)
+        self.eightFlakeButton = Control.Button(10, 440, 180, 30, "8 Segment", self.eight_flake_button_clicked)
+        self.eightteenFlakeButton = Control.Button(10, 480, 180, 30, "18 Segment", self.eighteen_flake_button_clicked)
+        self.thirtytwoFlakeButton = Control.Button(10, 520, 180, 30, "32 Segment", self.thirtytwo_flake_button_clicked)
+        self.fiftyFlakeButton = Control.Button(10, 560, 180, 30, "50 Segment", self.fifty_flake_button_clicked)
 
     def draw(self, screen):
         pygame.draw.rect(screen, 'lightblue', self.rect)
@@ -36,6 +38,8 @@ class ControlPanel:
         self.sidesLabel.draw(screen)
         self.polyButton.draw(screen)
         self.reverseCheck.draw(screen)
+        self.angleSpinBox.draw(screen)
+        self.angleLabel.draw(screen)
         self.kochButton.draw(screen)
         self.levelSpinBox.draw(screen)
         self.levelLabel.draw(screen)
@@ -52,6 +56,7 @@ class ControlPanel:
         self.sidesSpinBox.handle_events(event)
         self.reverseCheck.handle_events(event)
         self.levelSpinBox.handle_events(event)
+        self.angleSpinBox.handle_events(event)
 
     def radius_spinbox_changed(self, value):
         global radius
@@ -68,6 +73,10 @@ class ControlPanel:
     def reverse_checkbox_changed(self, value):
         global reverse
         reverse = value
+    
+    def angle_spinbox_changed(self, value):
+        global angle
+        angle = value
 
     def koch_button_clicked(self):
         global drawing_mode
@@ -164,6 +173,7 @@ level = 3
 radius = 250
 num_sides = 3
 reverse = True
+angle = 60
 
 def update(canvas):
     global drawing_mode, level, radius, num_sides, angle
@@ -193,8 +203,8 @@ def update(canvas):
     else:
         gen_angles = []
         if drawing_mode == DrawingMode.KOCH:
-            dist_factor = 3
-            gen_angles = [0, 60, -120, 60]
+            dist_factor = 2 * (1 + math.cos(math.radians(angle)))
+            gen_angles = [0, angle, -2*angle, angle]
         elif drawing_mode == DrawingMode.SQUARE_FLAKE:
             dist_factor = math.sqrt(5)
             gen_angles = [26.5, -90, 90]
